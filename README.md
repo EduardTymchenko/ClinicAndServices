@@ -1,15 +1,15 @@
 # ClinicAndServices
 
-Клиника имеет такие характеристики:
-Название
-Адрес
-Телефон
-Тип клиники (государственная или приватная)
-Можно ли пользоваться страховкой
-Количество врачей
-Набор услуг
-Услуга имеет такие характеристики:
-Название
-Стоимость услуги
-Проценты покрытия по страховке
-Время проведения услуги
+###The clinic has characteristics:
+- clinic name
+- location
+- phone
+- clinic type (public or private) 
+- the possibility of using insurance
+- number of doctors
+- services
+###Service has characteristics:
+- service name
+- fee 
+- insurance coverage percent
+- time of service
