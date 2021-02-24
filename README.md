@@ -1,6 +1,6 @@
 # ClinicAndServices
 
-###The clinic has characteristics:
+### The clinic has characteristics:
 - clinic name
 - location
 - phone
@@ -8,7 +8,7 @@
 - the possibility of using insurance
 - number of doctors
 - services
-###Service has characteristics:
+### Service has characteristics:
 - service name
 - fee 
 - insurance coverage percent
