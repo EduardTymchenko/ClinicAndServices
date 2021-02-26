@@ -3,6 +3,7 @@ package com.example.clinic.domain;
 import java.util.List;
 
 public class Clinic {
+    private long id;
     private String name;
     private String location;
     private String phone;
