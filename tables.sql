@@ -32,7 +32,11 @@ create table services
 );
 
 ALTER TABLE clinics RENAME COLUMN insurance TO has_insurance;
-
 ALTER TABLE clinics ADD type int;
-
 ALTER TABLE clinics DROP COLUMN public;
+
+
+ALTER TABLE services ADD time varchar;
+ALTER TABLE services DROP COLUMN start_time;
+ALTER TABLE services DROP COLUMN end_time;
+ALTER TABLE services DROP COLUMN days_of_week;

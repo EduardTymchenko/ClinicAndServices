@@ -25,6 +25,10 @@ public class Clinic {
         this.serviceList = serviceList;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

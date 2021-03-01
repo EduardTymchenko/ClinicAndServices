@@ -6,29 +6,22 @@ public class Service {
     private String name;
     private float fee;
     private int percentInsurance;
-    private ThreadLocal startTime;
-    private ThreadLocal endTime;
-    private int daysOfWeek;
+    private String time;
+
 
     public Service() {
     }
 
-    public Service(long id, String name, float fee, int percentInsurance, ThreadLocal startTime, ThreadLocal endTime, int daysOfWeek) {
+    public Service(long id, String name, float fee, int percentInsurance, String time) {
         this.id = id;
         this.name = name;
         this.fee = fee;
         this.percentInsurance = percentInsurance;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.daysOfWeek = daysOfWeek;
+        this.time = time;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -55,27 +48,11 @@ public class Service {
         this.percentInsurance = percentInsurance;
     }
 
-    public ThreadLocal getStartTime() {
-        return startTime;
+    public String getTime() {
+        return time;
     }
 
-    public void setStartTime(ThreadLocal startTime) {
-        this.startTime = startTime;
-    }
-
-    public ThreadLocal getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(ThreadLocal endTime) {
-        this.endTime = endTime;
-    }
-
-    public int getDaysOfWeek() {
-        return daysOfWeek;
-    }
-
-    public void setDaysOfWeek(int daysOfWeek) {
-        this.daysOfWeek = daysOfWeek;
+    public void setTime(String time) {
+        this.time = time;
     }
 }
