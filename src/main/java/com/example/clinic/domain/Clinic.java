@@ -7,7 +7,7 @@ public class Clinic {
     private String name;
     private String location;
     private String phone;
-    private boolean isPublic;
+    private TypeClinicEnum type;
     private boolean hasInsurance;
     private int numberDoctors;
     private List<Service> serviceList;
@@ -15,11 +15,11 @@ public class Clinic {
     public Clinic() {
     }
 
-    public Clinic(String name, String location, String phone, boolean isPublic, boolean hasInsurance, int numberDoctors, List<Service> serviceList) {
+    public Clinic(String name, String location, String phone, TypeClinicEnum type, boolean hasInsurance, int numberDoctors, List<Service> serviceList) {
         this.name = name;
         this.location = location;
         this.phone = phone;
-        this.isPublic = isPublic;
+        this.type = type;
         this.hasInsurance = hasInsurance;
         this.numberDoctors = numberDoctors;
         this.serviceList = serviceList;
@@ -49,12 +49,12 @@ public class Clinic {
         this.phone = phone;
     }
 
-    public boolean isPublic() {
-        return isPublic;
+    public TypeClinicEnum getType() {
+        return type;
     }
 
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
+    public void setType(TypeClinicEnum type) {
+        this.type = type;
     }
 
     public boolean isHasInsurance() {

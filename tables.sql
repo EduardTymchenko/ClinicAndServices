@@ -32,3 +32,7 @@ create table services
 );
 
 ALTER TABLE clinics RENAME COLUMN insurance TO has_insurance;
+
+ALTER TABLE clinics ADD type int;
+
+ALTER TABLE clinics DROP COLUMN public;
