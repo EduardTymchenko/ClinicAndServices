@@ -8,19 +8,19 @@ public class Clinic {
     private String location;
     private String phone;
     private boolean isPublic;
-    private boolean isInsurance;
+    private boolean hasInsurance;
     private int numberDoctors;
     private List<Service> serviceList;
 
     public Clinic() {
     }
 
-    public Clinic(String name, String location, String phone, boolean isPublic, boolean isInsurance, int numberDoctors, List<Service> serviceList) {
+    public Clinic(String name, String location, String phone, boolean isPublic, boolean hasInsurance, int numberDoctors, List<Service> serviceList) {
         this.name = name;
         this.location = location;
         this.phone = phone;
         this.isPublic = isPublic;
-        this.isInsurance = isInsurance;
+        this.hasInsurance = hasInsurance;
         this.numberDoctors = numberDoctors;
         this.serviceList = serviceList;
     }
@@ -57,12 +57,12 @@ public class Clinic {
         isPublic = aPublic;
     }
 
-    public boolean isInsurance() {
-        return isInsurance;
+    public boolean isHasInsurance() {
+        return hasInsurance;
     }
 
-    public void setInsurance(boolean insurance) {
-        isInsurance = insurance;
+    public void setHasInsurance(boolean hasInsurance) {
+        this.hasInsurance = hasInsurance;
     }
 
     public int getNumberDoctors() {

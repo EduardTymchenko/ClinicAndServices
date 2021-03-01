@@ -31,3 +31,4 @@ create table services
             references clinics (id)
 );
 
+ALTER TABLE clinics RENAME COLUMN insurance TO has_insurance;
