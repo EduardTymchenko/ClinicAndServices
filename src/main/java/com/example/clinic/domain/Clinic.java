@@ -1,6 +1,5 @@
 package com.example.clinic.domain;
 
-import java.util.List;
 
 public class Clinic {
     private long id;
@@ -9,24 +8,26 @@ public class Clinic {
     private String phone;
     private TypeClinicEnum type;
     private boolean hasInsurance;
-    private int numberDoctors;
-    private List<Service> serviceList;
+    private int doctors;
 
     public Clinic() {
     }
 
-    public Clinic(String name, String location, String phone, TypeClinicEnum type, boolean hasInsurance, int numberDoctors, List<Service> serviceList) {
+    public Clinic(String name, String location, String phone, TypeClinicEnum type, boolean hasInsurance, int doctors) {
         this.name = name;
         this.location = location;
         this.phone = phone;
         this.type = type;
         this.hasInsurance = hasInsurance;
-        this.numberDoctors = numberDoctors;
-        this.serviceList = serviceList;
+        this.doctors = doctors;
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -69,19 +70,25 @@ public class Clinic {
         this.hasInsurance = hasInsurance;
     }
 
-    public int getNumberDoctors() {
-        return numberDoctors;
+    public int getDoctors() {
+        return doctors;
     }
 
-    public void setNumberDoctors(int numberDoctors) {
-        this.numberDoctors = numberDoctors;
+    public void setDoctors(int doctors) {
+        this.doctors = doctors;
     }
 
-    public List<Service> getServiceList() {
-        return serviceList;
-    }
 
-    public void setServiceList(List<Service> serviceList) {
-        this.serviceList = serviceList;
+    @Override
+    public String toString() {
+        return "Clinic{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", phone='" + phone + '\'' +
+                ", type=" + type +
+                ", hasInsurance=" + hasInsurance +
+                ", numberDoctors=" + doctors +
+                '}';
     }
 }

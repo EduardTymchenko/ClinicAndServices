@@ -5,23 +5,28 @@ public class Service {
     private long id;
     private String name;
     private float fee;
-    private int percentInsurance;
+    private int coverage;
     private String time;
+    private long clinicId;
 
 
     public Service() {
     }
 
-    public Service(long id, String name, float fee, int percentInsurance, String time) {
-        this.id = id;
+    public Service(String name, float fee, int percentInsurance, String time, long clinicId) {
         this.name = name;
         this.fee = fee;
-        this.percentInsurance = percentInsurance;
+        this.coverage = percentInsurance;
         this.time = time;
+        this.clinicId = clinicId;
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -40,12 +45,12 @@ public class Service {
         this.fee = fee;
     }
 
-    public int getPercentInsurance() {
-        return percentInsurance;
+    public int getCoverage() {
+        return coverage;
     }
 
-    public void setPercentInsurance(int percentInsurance) {
-        this.percentInsurance = percentInsurance;
+    public void setCoverage(int coverage) {
+        this.coverage = coverage;
     }
 
     public String getTime() {
@@ -54,5 +59,25 @@ public class Service {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public long getClinicId() {
+        return clinicId;
+    }
+
+    public void setClinicId(long clinicId) {
+        this.clinicId = clinicId;
+    }
+
+    @Override
+    public String toString() {
+        return "Service{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", fee=" + fee +
+                ", percentInsurance=" + coverage +
+                ", time='" + time + '\'' +
+                ", clinicId=" + clinicId +
+                '}';
     }
 }
