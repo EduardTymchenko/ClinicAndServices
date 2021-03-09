@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -32,12 +33,10 @@ public class ApplicationReadyListener {
 
     @EventListener(ApplicationReadyEvent.class)
     public void applicationReadyHandler() {
-        LOGGER.info("***** Start create clinics *****");
-        for (Clinic clinic: createListClinic(5)) {
-            Clinic clinicAdded = clinicRepository.create(clinic);
-            LOGGER.info("Clinic added = {}",clinicAdded);
+
+        for (int i = 0; i < 10; i++) {
+            createClinics(3);
         }
-        LOGGER.info("***** End create clinics *****");
 
         LOGGER.info("***** Select All clinics *****");
         for (Clinic clinic:clinicRepository.getAll()){
@@ -51,12 +50,11 @@ public class ApplicationReadyListener {
         clinicForUpdate.setName("Update name");
         LOGGER.info("Clinic after update = {}",clinicRepository.update(clinicForUpdate));
 
-        LOGGER.info("***** Start create services *****");
-        for (Service service: createListServices(20)) {
-            Service servicesAdded = serviceRepository.create(service);
-            LOGGER.info("Service added = {}",servicesAdded);
+        LOGGER.info("Set of clinics name = {}",clinicRepository.getNamesClinicInsurance(true));
+// Service
+        for (int i = 0; i < 10; i++) {
+            createServices(4);
         }
-        LOGGER.info("***** End create services *****");
 
         LOGGER.info("***** Select All services *****");
         for (Service service:serviceRepository.getAll()){
@@ -70,6 +68,8 @@ public class ApplicationReadyListener {
         serviceForUpdate.setName("Update Service");
         LOGGER.info("Service after update = {}",serviceRepository.update(serviceForUpdate));
 
+        LOGGER.info("Set of services name = {}",serviceRepository.getNamesByFee(20,80));
+
         LOGGER.info("***** Delete all  services *****");
         List<Long> idsService = serviceRepository.getAll().stream().map(Service::getId).collect(Collectors.toList());
         idsService.stream().peek(serviceRepository::delete).collect(Collectors.toList());
@@ -79,6 +79,30 @@ public class ApplicationReadyListener {
         clinicRepository.getAll().stream().peek((clinic -> clinicRepository.delete(clinic.getId()))).collect(Collectors.toList());
         LOGGER.info("Total records: {}",serviceRepository.getNumberOfServices());
 
+    }
+
+
+    private void createClinics(int number){
+        LOGGER.info("***** Start create clinics *****");
+        for (Clinic clinic: createListClinic(number)) {
+            Optional<Clinic> clinicAdded = clinicRepository.create(clinic);
+            String inf;
+            if(clinicAdded.isPresent()) {
+                inf = clinicAdded.get().toString();
+            } else inf = "no added";
+            LOGGER.info("Clinic added = {}",inf);
+        }
+        LOGGER.info("***** End create clinics *****");
+
+    }
+
+    private void createServices(int number){
+        LOGGER.info("***** Start create services *****");
+        for (Service service: createListServices(number)) {
+            Optional<Service> servicesAdded = serviceRepository.create(service);
+            LOGGER.info("Service added = {}",servicesAdded);
+        }
+        LOGGER.info("***** End create services *****");
     }
 
     private List<Clinic> createListClinic(int number){

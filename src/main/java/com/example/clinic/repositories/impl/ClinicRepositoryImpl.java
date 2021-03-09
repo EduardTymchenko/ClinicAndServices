@@ -3,8 +3,8 @@ package com.example.clinic.repositories.impl;
 import com.example.clinic.domain.Clinic;
 import com.example.clinic.repositories.ClinicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -12,6 +12,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class ClinicRepositoryImpl implements ClinicRepository {
@@ -27,7 +30,7 @@ public class ClinicRepositoryImpl implements ClinicRepository {
     }
 
     @Override
-    public Clinic create(Clinic clinic) {
+    public Optional<Clinic> create(Clinic clinic) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "insert into clinics (name, location, phone, type, has_insurance, doctors) values (?,?,?,?,?,?)";
         jdbcTemplate.update(con -> {
@@ -49,12 +52,17 @@ public class ClinicRepositoryImpl implements ClinicRepository {
     }
 
     @Override
-    public Clinic getById(long id) {
-        return jdbcTemplate.queryForObject("select * from clinics  where id = ? ", clinicRowMapper, id);
+    public Optional<Clinic> getById(long id) {
+        try {
+            Clinic clinic = jdbcTemplate.queryForObject("select * from clinics  where id = ? ", clinicRowMapper, id);
+            return Optional.ofNullable(clinic);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Clinic update(Clinic clinic) {
+    public Optional<Clinic> update(Clinic clinic) {
         jdbcTemplate.update("update clinics set name = ?, location = ?, phone = ?, has_insurance = ?," +
                         "doctors = ?, type = ? where id = ?",
                 clinic.getName(), clinic.getLocation(), clinic.getPhone(), clinic.isHasInsurance(),
@@ -73,4 +81,9 @@ public class ClinicRepositoryImpl implements ClinicRepository {
         return quantity == null ? 0 : quantity;
     }
 
+    @Override
+    public Set<String> getNamesClinicInsurance(boolean hasInsurance) {
+        return getAll().stream().filter(clinic -> clinic.isHasInsurance() == hasInsurance )
+                .map(Clinic::getName).collect(Collectors.toSet());
+    }
 }

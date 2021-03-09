@@ -3,6 +3,7 @@ package com.example.clinic.repositories.impl;
 import com.example.clinic.domain.Service;
 import com.example.clinic.repositories.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class ServiceRepositoryImpl implements ServiceRepository {
@@ -26,7 +30,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public Service create(Service service) {
+    public Optional<Service> create(Service service) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "insert into services (name, fee, coverage, time, clinic_id) values (?,?,?,?,?)";
         jdbcTemplate.update(con -> {
@@ -47,12 +51,18 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public Service getById(long id) {
-        return jdbcTemplate.queryForObject("select * from services  where id = ? ", serviceRowMapper, id);
+    public Optional<Service> getById(long id) {
+        try{
+            Service service = jdbcTemplate.queryForObject("select * from services  where id = ? ", serviceRowMapper, id);
+            return Optional.ofNullable(service);
+        }
+        catch (DataAccessException e){
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Service update(Service service) {
+    public Optional<Service> update(Service service) {
         jdbcTemplate.update("update services set name = ?, fee = ?, coverage = ?, time = ?, clinic_id = ? where id = ?",
                 service.getName(), service.getFee(), service.getCoverage(), service.getTime(), service.getClinicId(), service.getId());
         return getById(service.getId());
@@ -67,5 +77,11 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     public int getNumberOfServices() {
         Integer quantity = jdbcTemplate.queryForObject("select count(*) from services", Integer.class);
         return quantity == null ? 0 : quantity;
+    }
+
+    @Override
+    public Set<String> getNamesByFee(float minFee, float maxFee) {
+        return getAll().stream().filter((service -> service.getFee() >= minFee && service.getFee() <= maxFee))
+                .map(service -> service.getName()).collect(Collectors.toSet());
     }
 }
