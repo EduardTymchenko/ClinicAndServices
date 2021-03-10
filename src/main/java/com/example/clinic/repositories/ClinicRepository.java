@@ -3,20 +3,24 @@ package com.example.clinic.repositories;
 import com.example.clinic.domain.Clinic;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public interface ClinicRepository {
 
-    Clinic create(Clinic clinic);
+    Optional<Clinic>  create(Clinic clinic);
 
     List<Clinic> getAll();
 
-    Clinic getById(long id);
+    Optional<Clinic> getById(long id);
 
-    Clinic update(Clinic clinic);
+    Optional<Clinic> update(Clinic clinic);
 
     void delete (long id);
 
     int getNumberOfClinics();
+
+    Set<String> getNamesClinicInsurance(boolean hasInsurance);
 
 
 
