@@ -8,7 +8,7 @@ public interface ServiceService {
 
     ServiceDto create(ServiceDto service);
 
-    List<Service> getAll();
+    List<ServiceDto> getAll();
 
     ServiceDto getById(long id);
 

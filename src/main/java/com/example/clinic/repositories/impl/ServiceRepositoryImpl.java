@@ -84,4 +84,14 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return getAll().stream().filter((service -> service.getFee() >= minFee && service.getFee() <= maxFee))
                 .map(service -> service.getName()).collect(Collectors.toSet());
     }
+
+    @Override
+    public List<Service> getAllByClinicId(long id) {
+        return jdbcTemplate.query("select * from services where clinic_id = ?", serviceRowMapper, id);
+    }
+
+    @Override
+    public void deleteAllByClinicId(long id) {
+        jdbcTemplate.update("delete from services where clinic_id = ?", id);
+    }
 }
