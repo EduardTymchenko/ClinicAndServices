@@ -15,4 +15,6 @@ public interface ClinicService {
     ClinicDto update(ClinicDto clinicDto);
 
     void delete(long id);
+
+    List<ClinicDto> getAllByText(String searchText, int pageNumber, int pageSize);
 }

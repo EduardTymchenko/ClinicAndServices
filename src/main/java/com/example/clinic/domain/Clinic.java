@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Clinic {
+
     private long id;
     private String name;
     private String location;
@@ -21,16 +22,5 @@ public class Clinic {
     private TypeClinicEnum type;
     private boolean hasInsurance;
     private int doctors;
-
-
-
-//    public Clinic(String name, String location, String phone, TypeClinicEnum type, boolean hasInsurance, int doctors) {
-//        this.name = name;
-//        this.location = location;
-//        this.phone = phone;
-//        this.type = type;
-//        this.hasInsurance = hasInsurance;
-//        this.doctors = doctors;
-//    }
 
 }

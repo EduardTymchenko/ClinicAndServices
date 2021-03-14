@@ -22,7 +22,4 @@ public interface ClinicRepository {
 
     Set<String> getNamesClinicInsurance(boolean hasInsurance);
 
-
-
-
 }
