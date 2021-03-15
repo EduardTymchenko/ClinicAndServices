@@ -25,4 +25,6 @@ public interface ServiceRepository {
 
     void deleteAllByClinicId(long id);
 
+    List<Service> getAllByText(String searchText, int pageNumber, int pageSize);
+
 }

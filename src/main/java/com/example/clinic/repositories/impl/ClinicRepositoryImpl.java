@@ -86,4 +86,18 @@ public class ClinicRepositoryImpl implements ClinicRepository {
         return getAll().stream().filter(clinic -> clinic.isHasInsurance() == hasInsurance )
                 .map(Clinic::getName).collect(Collectors.toSet());
     }
+
+    @Override
+    public List<Clinic> getAllByText(String searchText, int pageNumber, int pageSize) {
+        return jdbcTemplate.query("select * from clinics c where " +
+                        "lower(cast(c.id as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(c.name) like lower(concat('%',?0,'%')) or " +
+                        "lower(c.location) like lower(concat('%',?0,'%')) or " +
+                        "lower(c.phone) like lower(concat('%',?0,'%')) or " +
+                        "lower(cast( c.has_insurance as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(cast(c.doctors as varchar))  like lower(concat('%',?0,'%')) or " +
+                        "lower(case c.type when 0 then 'private' when 1 then 'public' end) like lower(concat('%',?0,'%')) " +
+                        "order by c.id limit ?1 offset ?2", clinicRowMapper,
+                searchText, pageSize, pageNumber <= 0 ? 0 : pageNumber * pageSize + 1);
+    }
 }

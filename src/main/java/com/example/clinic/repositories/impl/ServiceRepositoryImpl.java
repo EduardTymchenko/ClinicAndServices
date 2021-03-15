@@ -52,11 +52,10 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Override
     public Optional<Service> getById(long id) {
-        try{
+        try {
             Service service = jdbcTemplate.queryForObject("select * from services  where id = ? ", serviceRowMapper, id);
             return Optional.ofNullable(service);
-        }
-        catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
@@ -93,5 +92,17 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     @Override
     public void deleteAllByClinicId(long id) {
         jdbcTemplate.update("delete from services where clinic_id = ?", id);
+    }
+
+    @Override
+    public List<Service> getAllByText(String searchText, int pageNumber, int pageSize) {
+        return jdbcTemplate.query("select * from services s where " +
+                        "lower(cast(s.id as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(s.name) like lower(concat('%',?0,'%')) or " +
+                        "lower(cast( s.fee as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(cast( s.coverage as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(s.time) like lower(concat('%',?0,'%')) " +
+                        "order by s.id limit ?1 offset ?2", serviceRowMapper,
+                searchText, pageSize, pageNumber <= 0 ? 0 : pageNumber * pageSize + 1);
     }
 }

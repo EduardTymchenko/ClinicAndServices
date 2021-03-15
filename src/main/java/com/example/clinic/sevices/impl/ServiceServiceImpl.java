@@ -57,7 +57,10 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<ServiceDto> getAllByText(String searchText, int pageNumber, int pageSize) {
-        return null;
+        return serviceRepository.getAllByText(searchText, pageNumber, pageSize)
+                .stream()
+                .map(ServiceDto::new)
+                .collect(Collectors.toList());
     }
 
     private boolean existsClinicById (long idClinic){
