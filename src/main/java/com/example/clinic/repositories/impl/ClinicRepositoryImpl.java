@@ -88,7 +88,7 @@ public class ClinicRepositoryImpl implements ClinicRepository {
     }
 
     @Override
-    public List<Clinic> getAllByText(String searchText, int pageNumber, int pageSize) {
+    public List<Clinic> getAllByText(String searchText, Integer pageNumber, Integer pageSize) {
         return jdbcTemplate.query("select * from clinics c where " +
                         "lower(cast(c.id as varchar)) like lower(concat('%',?0,'%')) or " +
                         "lower(c.name) like lower(concat('%',?0,'%')) or " +
@@ -98,6 +98,6 @@ public class ClinicRepositoryImpl implements ClinicRepository {
                         "lower(cast(c.doctors as varchar))  like lower(concat('%',?0,'%')) or " +
                         "lower(case c.type when 0 then 'private' when 1 then 'public' end) like lower(concat('%',?0,'%')) " +
                         "order by c.id limit ?1 offset ?2", clinicRowMapper,
-                searchText, pageSize, pageNumber <= 0 ? 0 : pageNumber * pageSize + 1);
+                searchText == null ? "" : searchText, pageSize, pageSize == null || pageNumber == null ||  pageNumber <= 0  ? 0 : pageNumber * pageSize + 1);
     }
 }

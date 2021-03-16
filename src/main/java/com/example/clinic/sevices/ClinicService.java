@@ -16,5 +16,5 @@ public interface ClinicService {
 
     void delete(long id);
 
-    List<ClinicDto> getAllByText(String searchText, int pageNumber, int pageSize);
+    List<ClinicDto> getAllByText(String searchText, Integer pageNumber, Integer pageSize);
 }

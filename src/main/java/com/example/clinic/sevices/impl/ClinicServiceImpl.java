@@ -75,7 +75,7 @@ public class ClinicServiceImpl implements ClinicService {
     }
 
     @Override
-    public List<ClinicDto> getAllByText(String searchText, int pageNumber, int pageSize) {
+    public List<ClinicDto> getAllByText(String searchText, Integer pageNumber, Integer pageSize) {
         return clinicRepository.getAllByText(searchText, pageNumber, pageSize)
                 .stream()
                 .map(clinic -> new ClinicDto(clinic, serviceRepository.getAllByClinicId(clinic.getId())))

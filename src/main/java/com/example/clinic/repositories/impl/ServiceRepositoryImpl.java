@@ -95,7 +95,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public List<Service> getAllByText(String searchText, int pageNumber, int pageSize) {
+    public List<Service> getAllByText(String searchText, Integer pageNumber, Integer pageSize) {
         return jdbcTemplate.query("select * from services s where " +
                         "lower(cast(s.id as varchar)) like lower(concat('%',?0,'%')) or " +
                         "lower(s.name) like lower(concat('%',?0,'%')) or " +
@@ -103,6 +103,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                         "lower(cast( s.coverage as varchar)) like lower(concat('%',?0,'%')) or " +
                         "lower(s.time) like lower(concat('%',?0,'%')) " +
                         "order by s.id limit ?1 offset ?2", serviceRowMapper,
-                searchText, pageSize, pageNumber <= 0 ? 0 : pageNumber * pageSize + 1);
+                searchText == null ? "" : searchText, pageSize, pageSize == null || pageNumber == null || pageNumber <= 0 ? 0 : pageNumber * pageSize + 1);
     }
 }

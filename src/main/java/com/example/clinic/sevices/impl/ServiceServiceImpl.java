@@ -56,7 +56,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDto> getAllByText(String searchText, int pageNumber, int pageSize) {
+    public List<ServiceDto> getAllByText(String searchText, Integer pageNumber, Integer pageSize) {
         return serviceRepository.getAllByText(searchText, pageNumber, pageSize)
                 .stream()
                 .map(ServiceDto::new)

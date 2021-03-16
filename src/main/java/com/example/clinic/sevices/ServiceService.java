@@ -16,5 +16,5 @@ public interface ServiceService {
 
     void delete(long id);
 
-    List<ServiceDto> getAllByText(String searchText, int pageNumber, int pageSize);
+    List<ServiceDto> getAllByText(String searchText, Integer pageNumber, Integer pageSize);
 }
