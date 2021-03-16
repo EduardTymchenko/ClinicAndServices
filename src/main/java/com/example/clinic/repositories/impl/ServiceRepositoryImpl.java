@@ -52,11 +52,10 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Override
     public Optional<Service> getById(long id) {
-        try{
+        try {
             Service service = jdbcTemplate.queryForObject("select * from services  where id = ? ", serviceRowMapper, id);
             return Optional.ofNullable(service);
-        }
-        catch (DataAccessException e){
+        } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
@@ -83,5 +82,27 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     public Set<String> getNamesByFee(float minFee, float maxFee) {
         return getAll().stream().filter((service -> service.getFee() >= minFee && service.getFee() <= maxFee))
                 .map(service -> service.getName()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<Service> getAllByClinicId(long id) {
+        return jdbcTemplate.query("select * from services where clinic_id = ?", serviceRowMapper, id);
+    }
+
+    @Override
+    public void deleteAllByClinicId(long id) {
+        jdbcTemplate.update("delete from services where clinic_id = ?", id);
+    }
+
+    @Override
+    public List<Service> getAllByText(String searchText, Integer pageNumber, Integer pageSize) {
+        return jdbcTemplate.query("select * from services s where " +
+                        "lower(cast(s.id as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(s.name) like lower(concat('%',?0,'%')) or " +
+                        "lower(cast( s.fee as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(cast( s.coverage as varchar)) like lower(concat('%',?0,'%')) or " +
+                        "lower(s.time) like lower(concat('%',?0,'%')) " +
+                        "order by s.id limit ?1 offset ?2", serviceRowMapper,
+                searchText == null ? "" : searchText, pageSize, pageSize == null || pageNumber == null || pageNumber <= 0 ? 0 : pageNumber * pageSize + 1);
     }
 }

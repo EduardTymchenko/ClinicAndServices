@@ -22,7 +22,6 @@ public interface ClinicRepository {
 
     Set<String> getNamesClinicInsurance(boolean hasInsurance);
 
-
-
+    List<Clinic> getAllByText(String searchText, Integer pageNumber, Integer pageSize);
 
 }

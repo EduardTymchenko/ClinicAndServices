@@ -21,4 +21,10 @@ public interface ServiceRepository {
 
     Set<String> getNamesByFee(float minFee, float maxFee);
 
+    List<Service> getAllByClinicId(long id);
+
+    void deleteAllByClinicId(long id);
+
+    List<Service> getAllByText(String searchText, Integer pageNumber, Integer pageSize);
+
 }

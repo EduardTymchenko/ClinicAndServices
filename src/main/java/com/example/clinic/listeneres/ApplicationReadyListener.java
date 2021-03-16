@@ -5,6 +5,8 @@ import com.example.clinic.domain.Service;
 import com.example.clinic.domain.TypeClinicEnum;
 import com.example.clinic.repositories.ClinicRepository;
 import com.example.clinic.repositories.ServiceRepository;
+import com.example.clinic.sevices.ServiceService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -19,17 +21,15 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class ApplicationReadyListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationReadyListener.class);
 
     private final ClinicRepository clinicRepository;
     private final ServiceRepository serviceRepository;
+    private final ServiceService serviceService;
 
-    public ApplicationReadyListener(ClinicRepository clinicRepository, ServiceRepository serviceRepository) {
-        this.clinicRepository = clinicRepository;
-        this.serviceRepository = serviceRepository;
-    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void applicationReadyHandler() {
@@ -70,6 +70,8 @@ public class ApplicationReadyListener {
 
         LOGGER.info("Set of services name = {}",serviceRepository.getNamesByFee(20,80));
 
+        LOGGER.info("sevice: {}",serviceService.getAll());
+
         LOGGER.info("***** Delete all  services *****");
         List<Long> idsService = serviceRepository.getAll().stream().map(Service::getId).collect(Collectors.toList());
         idsService.stream().peek(serviceRepository::delete).collect(Collectors.toList());
@@ -78,6 +80,9 @@ public class ApplicationReadyListener {
         LOGGER.info("***** Delete all  clinic *****");
         clinicRepository.getAll().stream().peek((clinic -> clinicRepository.delete(clinic.getId()))).collect(Collectors.toList());
         LOGGER.info("Total records: {}",serviceRepository.getNumberOfServices());
+
+
+        LOGGER.info("sevice: {}",serviceService.getAll());
 
     }
 
@@ -109,7 +114,7 @@ public class ApplicationReadyListener {
         List<Clinic> clinics = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < number; i++) {
-            clinics.add( new Clinic("clinic " + i, "address " + i,"050-22-22-22" + i,
+            clinics.add( new Clinic(0, "clinic " + i, "address " + i,"050-22-22-22" + i,
                     TypeClinicEnum.values()[random.nextBoolean() ? 1 : 0],random.nextBoolean(),random.nextInt(100)));
         }
         return clinics;
@@ -120,7 +125,7 @@ public class ApplicationReadyListener {
         Random random = new Random();
         List<Long> idsClinic = clinicRepository.getAll().stream().map((Clinic::getId)).collect(Collectors.toList());
         for (int i = 0; i < number; i++) {
-            services.add( new Service("Service " + i, random.nextFloat() * 100,random.nextInt(50),
+            services.add( new Service(0,"Service " + i, random.nextFloat() * 100,random.nextInt(50),
                     random.nextInt(3) + "h" + random.nextInt(59) + "m",
                     idsClinic.get(random.nextInt(idsClinic.size() - 1))));
         }
