@@ -71,7 +71,7 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     public void delete(long id) {
         serviceRepository.deleteAllByClinicId(id);
-        clinicRepository.getById(id);
+        clinicRepository.delete(id);
     }
 
     @Override
