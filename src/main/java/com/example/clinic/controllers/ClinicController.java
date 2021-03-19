@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,6 +52,14 @@ public class ClinicController {
             @RequestBody ClinicDto clinicDto) {
         clinicDto.setId(id);
         return clinicService.update(clinicDto);
+    }
+
+    @GetMapping(value = "/search")
+    public List<ClinicDto> search(
+            @RequestParam(required = false) String searchText,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) Integer pageNumber) {
+        return clinicService.getAllByText(searchText, pageNumber, pageSize);
     }
 
 }

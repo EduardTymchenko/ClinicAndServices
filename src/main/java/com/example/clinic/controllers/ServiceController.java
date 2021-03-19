@@ -57,4 +57,12 @@ public class ServiceController {
         serviceService.delete(id);
     }
 
+    @GetMapping(value = "/search")
+    public List<ServiceDto> search(
+            @RequestParam(required = false) String searchText,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) Integer pageNumber) {
+        return serviceService.getAllByText(searchText, pageNumber, pageSize);
+    }
+
 }

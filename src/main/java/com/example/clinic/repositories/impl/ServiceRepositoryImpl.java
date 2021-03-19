@@ -2,10 +2,13 @@ package com.example.clinic.repositories.impl;
 
 import com.example.clinic.domain.Service;
 import com.example.clinic.repositories.ServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,17 +20,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
+@RequiredArgsConstructor
 public class ServiceRepositoryImpl implements ServiceRepository {
 
     private final RowMapper<Service> serviceRowMapper;
-
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ServiceRepositoryImpl(RowMapper<Service> serviceRowMapper, JdbcTemplate jdbcTemplate) {
-        this.serviceRowMapper = serviceRowMapper;
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     public Optional<Service> create(Service service) {
@@ -96,13 +94,19 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Override
     public List<Service> getAllByText(String searchText, Integer pageNumber, Integer pageSize) {
-        return jdbcTemplate.query("select * from services s where " +
-                        "lower(cast(s.id as varchar)) like lower(concat('%',?0,'%')) or " +
-                        "lower(s.name) like lower(concat('%',?0,'%')) or " +
-                        "lower(cast( s.fee as varchar)) like lower(concat('%',?0,'%')) or " +
-                        "lower(cast( s.coverage as varchar)) like lower(concat('%',?0,'%')) or " +
-                        "lower(s.time) like lower(concat('%',?0,'%')) " +
-                        "order by s.id limit ?1 offset ?2", serviceRowMapper,
-                searchText == null ? "" : searchText, pageSize, pageSize == null || pageNumber == null || pageNumber <= 0 ? 0 : pageNumber * pageSize + 1);
+        String query = "select * from services s where " +
+                "lower(cast(s.id as varchar)) like lower(concat('%',:searchText,'%')) or " +
+                "lower(s.name) like lower(concat('%',:searchText,'%')) or " +
+                "lower(cast( s.fee as varchar)) like lower(concat('%',:searchText,'%')) or " +
+                "lower(cast( s.coverage as varchar)) like lower(concat('%',:searchText,'%')) or " +
+                "lower(s.time) like lower(concat('%',:searchText,'%')) " +
+                "order by s.id limit :pageSize offset :pageNumber";
+
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("searchText", searchText == null ? "" : searchText)
+                .addValue("pageSize", pageSize)
+                .addValue("pageNumber", pageSize == null || pageNumber == null || pageNumber <= 0 ? 0 : pageNumber * pageSize);
+
+        return namedParameterJdbcTemplate.query(query, parameters, serviceRowMapper);
     }
 }
