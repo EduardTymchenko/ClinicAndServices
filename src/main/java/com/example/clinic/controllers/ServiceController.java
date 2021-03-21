@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -24,11 +25,11 @@ public class ServiceController {
 
     private final ServiceService serviceService;
 
-    @PostMapping
+    @PostMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceDto create(
             @RequestBody ServiceDto service,
-            @RequestParam Long idClinic) {
+            @PathParam("id") Long idClinic) {
         return serviceService.create(service, idClinic);
     }
 
