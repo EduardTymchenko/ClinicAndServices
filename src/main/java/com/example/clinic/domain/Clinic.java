@@ -1,11 +1,7 @@
 package com.example.clinic.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Builder
 public class Clinic {
 
     private long id;
