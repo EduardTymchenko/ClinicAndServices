@@ -1,7 +1,7 @@
 package com.example.clinic.controllers;
 
-import com.example.clinic.dtos.ClinicDto;
-import com.example.clinic.sevices.ClinicService;
+import com.example.clinic.dtos.ServiceDto;
+import com.example.clinic.sevices.ServiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,51 +15,55 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v1/clinics")
+@RequestMapping(value = "/v1/services")
 @RequiredArgsConstructor
-public class ClinicController {
+public class ServiceController {
 
-    private final ClinicService clinicService;
+    private final ServiceService serviceService;
+
+    @PostMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ServiceDto create(
+            @RequestBody ServiceDto service,
+            @PathParam("id") Long idClinic) {
+        return serviceService.create(service, idClinic);
+    }
 
     @GetMapping
-    public List<ClinicDto> getAll() {
-        return clinicService.getAll();
+    public List<ServiceDto> getAll() {
+        return serviceService.getAll();
     }
 
     @GetMapping(value = "/{id}")
-    public ClinicDto getOne(@PathVariable Long id) {
-        return clinicService.getById(id);
+    public ServiceDto getById(@PathVariable Long id) {
+        return serviceService.getById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ClinicDto create(@RequestBody ClinicDto clinicDto) {
-        return clinicService.create(clinicDto);
+    @PutMapping(value = "/{id}")
+    public ServiceDto update(
+            @PathVariable Long id,
+            @RequestParam Long idClinic,
+            @RequestBody ServiceDto service) {
+        service.setId(id);
+        return serviceService.update(service, idClinic);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        clinicService.delete(id);
-    }
-
-    @PutMapping(value = "/{id}")
-    public ClinicDto update(
-            @PathVariable Long id,
-            @RequestBody ClinicDto clinicDto) {
-        clinicDto.setId(id);
-        return clinicService.update(clinicDto);
+        serviceService.delete(id);
     }
 
     @GetMapping(value = "/search")
-    public List<ClinicDto> search(
+    public List<ServiceDto> search(
             @RequestParam(required = false) String searchText,
             @RequestParam(required = false) Integer pageSize,
             @RequestParam(required = false) Integer pageNumber) {
-        return clinicService.getAllByText(searchText, pageNumber, pageSize);
+        return serviceService.getAllByText(searchText, pageNumber, pageSize);
     }
 
 }

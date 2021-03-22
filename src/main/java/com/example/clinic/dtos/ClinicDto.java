@@ -3,7 +3,9 @@ package com.example.clinic.dtos;
 import com.example.clinic.domain.Clinic;
 import com.example.clinic.domain.Service;
 import com.example.clinic.domain.TypeClinicEnum;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.util.CollectionUtils;
@@ -12,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
