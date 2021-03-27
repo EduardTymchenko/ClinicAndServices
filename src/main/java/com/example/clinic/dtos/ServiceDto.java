@@ -1,6 +1,7 @@
 package com.example.clinic.dtos;
 
 import com.example.clinic.domain.Service;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class ServiceDto {
     private long id;
     private String name;

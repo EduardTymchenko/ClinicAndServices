@@ -4,6 +4,7 @@ import com.example.clinic.domain.Clinic;
 import com.example.clinic.domain.Service;
 import com.example.clinic.domain.TypeClinicEnum;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class ClinicDto {
 
     private long id;
