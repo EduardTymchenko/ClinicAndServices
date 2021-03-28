@@ -1,15 +1,15 @@
 package com.example.clinic.dtos;
 
 import com.example.clinic.domain.Service;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
+@Builder
 public class ServiceDto {
     private long id;
     private String name;
