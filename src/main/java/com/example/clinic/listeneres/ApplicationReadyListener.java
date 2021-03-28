@@ -4,6 +4,7 @@ import com.example.clinic.domain.Clinic;
 import com.example.clinic.domain.Service;
 import com.example.clinic.domain.TypeClinicEnum;
 import com.example.clinic.repositories.ClinicRepository;
+import com.example.clinic.repositories.JpaClinicRepository;
 import com.example.clinic.repositories.ServiceRepository;
 import com.example.clinic.sevices.ServiceService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -29,12 +29,13 @@ public class ApplicationReadyListener {
     private final ClinicRepository clinicRepository;
     private final ServiceRepository serviceRepository;
     private final ServiceService serviceService;
+    private final JpaClinicRepository jpaClinicRepository;
 
 
     @EventListener(ApplicationReadyEvent.class)
     public void applicationReadyHandler() {
 
-        for (int i = 0; i < 10; i++) {
+       /* for (int i = 0; i < 10; i++) {
             createClinics(3);
         }
 
@@ -70,19 +71,19 @@ public class ApplicationReadyListener {
 
         LOGGER.info("Set of services name = {}",serviceRepository.getNamesByFee(20,80));
 
-        LOGGER.info("sevice: {}",serviceService.getAll());
+        LOGGER.info("sevice: {}",serviceService.getAll());*/
 
-        LOGGER.info("***** Delete all  services *****");
-        List<Long> idsService = serviceRepository.getAll().stream().map(Service::getId).collect(Collectors.toList());
-        idsService.stream().peek(serviceRepository::delete).collect(Collectors.toList());
-        LOGGER.info("Total records: {}",serviceRepository.getNumberOfServices());
+//        LOGGER.info("***** Delete all  services *****");
+//        List<Long> idsService = serviceRepository.getAll().stream().map(Service::getId).collect(Collectors.toList());
+//        idsService.stream().peek(serviceRepository::delete).collect(Collectors.toList());
+//        LOGGER.info("Total records: {}",serviceRepository.getNumberOfServices());
+//
+//        LOGGER.info("***** Delete all  clinic *****");
+//        clinicRepository.getAll().stream().peek((clinic -> clinicRepository.delete(clinic.getId()))).collect(Collectors.toList());
+//        LOGGER.info("Total records: {}",serviceRepository.getNumberOfServices());
 
-        LOGGER.info("***** Delete all  clinic *****");
-        clinicRepository.getAll().stream().peek((clinic -> clinicRepository.delete(clinic.getId()))).collect(Collectors.toList());
-        LOGGER.info("Total records: {}",serviceRepository.getNumberOfServices());
 
-
-        LOGGER.info("sevice: {}",serviceService.getAll());
+        LOGGER.info("sevice: {}",jpaClinicRepository.findById(205L));
 
     }
 

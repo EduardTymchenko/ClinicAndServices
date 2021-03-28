@@ -6,8 +6,8 @@ import com.example.clinic.dtos.ServiceDto;
 import com.example.clinic.exeption.ResourceNotCreatedException;
 import com.example.clinic.exeption.ResourceNotFoundException;
 import com.example.clinic.exeption.ResourceNotUpdateException;
-import com.example.clinic.repositories.ClinicRepository;
-import com.example.clinic.repositories.ServiceRepository;
+import com.example.clinic.repositories.JpaClinicRepository;
+import com.example.clinic.repositories.JpaServiceRepository;
 import com.example.clinic.sevices.ClinicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClinicServiceImpl implements ClinicService {
 
-    private final ClinicRepository clinicRepository;
-    private final ServiceRepository serviceRepository;
+    private final JpaClinicRepository clinicRepository;
+    private final JpaServiceRepository serviceRepository;
+
 
 
     @Override
@@ -47,18 +48,18 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     public List<ClinicDto> getAll() {
-        List<Clinic> clinics = clinicRepository.getAll();
+        List<Clinic> clinics = clinicRepository.findAll();
         if (clinics == null || clinics.isEmpty()) return Collections.emptyList();
         return clinics
                 .stream()
-                .map(clinic -> new ClinicDto(clinic, serviceRepository.getAllByClinicId(clinic.getId())))
+                .map(clinic -> new ClinicDto(clinic, serviceRepository.findAllByClinic(clinic)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ClinicDto getById(long id) {
-        return clinicRepository.getById(id)
-                .map(clinic -> new ClinicDto(clinic, serviceRepository.getAllByClinicId(id)))
+        return clinicRepository.findById(id)
+                .map(clinic -> new ClinicDto(clinic, serviceRepository.findAllByClinic(clinic)))
                 .orElseThrow(() -> new ResourceNotFoundException("Clinic with id = " + id + " is not fond"));
     }
 
@@ -97,9 +98,9 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     public void delete(long id) {
-        clinicRepository.getById(id).map(clinic -> {
-            serviceRepository.deleteAllByClinicId(id);
-            clinicRepository.delete(id);
+        clinicRepository.findById(id).map(clinic -> {
+            serviceRepository.deleteAllByClinic(clinic);
+            clinicRepository.deleteById(id);
             return clinic;
         }).orElseThrow(() -> new ResourceNotFoundException("Clinic with id = " + id + " is not fond"));
     }

@@ -26,14 +26,13 @@ public class ServiceDto {
         this.time = service.getTime();
     }
 
-    public static Service toDomain(ServiceDto serviceDto,  long clinicId) {
+    public static Service toDomain(ServiceDto serviceDto) {
         return new Service(
                 serviceDto.getId(),
                 serviceDto.getName(),
                 serviceDto.getFee(),
                 serviceDto.getCoverage(),
-                serviceDto.getTime(),
-                clinicId);
+                serviceDto.getTime());
 
     }
 
