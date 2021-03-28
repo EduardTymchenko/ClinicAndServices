@@ -12,7 +12,9 @@ import com.example.clinic.sevices.ClinicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,19 +30,26 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     public ClinicDto create(ClinicDto clinicDto) {
-        Clinic newClinic = clinicRepository.create(ClinicDto.toDomain(clinicDto)).orElseThrow(() -> new ResourceNotCreatedException("The clinic was not created"));
-        List<com.example.clinic.domain.Service> services = clinicDto.getServices()
-                .stream()
-                .map(serviceDto -> serviceRepository.create(ServiceDto.toDomain(serviceDto, newClinic.getId())))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        Clinic newClinic = clinicRepository.create(ClinicDto.toDomain(clinicDto))
+                .orElseThrow(() -> new ResourceNotCreatedException("The clinic was not created"));
+        List<ServiceDto> serviceDtoList = clinicDto.getServices();
+        List<com.example.clinic.domain.Service> services = null;
+        if (serviceDtoList != null && !serviceDtoList.isEmpty()) {
+            services = serviceDtoList.stream()
+                    .map(serviceDto -> serviceRepository.create(ServiceDto.toDomain(serviceDto, newClinic.getId())))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toList());
+        }
+
         return new ClinicDto(newClinic, services);
     }
 
     @Override
     public List<ClinicDto> getAll() {
-        return clinicRepository.getAll()
+        List<Clinic> clinics = clinicRepository.getAll();
+        if (clinics == null || clinics.isEmpty()) return Collections.emptyList();
+        return clinics
                 .stream()
                 .map(clinic -> new ClinicDto(clinic, serviceRepository.getAllByClinicId(clinic.getId())))
                 .collect(Collectors.toList());
@@ -57,21 +66,42 @@ public class ClinicServiceImpl implements ClinicService {
     public ClinicDto update(ClinicDto clinicDto) {
         Clinic updatedClinic = clinicRepository.update(ClinicDto.toDomain(clinicDto))
                 .orElseThrow(() -> new ResourceNotUpdateException("Clinic with id = " + clinicDto.getId() + " was not updated"));
-        List<Long> idsServices = clinicDto.getServices().stream().map(ServiceDto::getId).collect(Collectors.toList());
-        serviceRepository.getAllByClinicId(clinicDto.getId())
-                .forEach(service -> {
-                    if (idsServices.contains(service.getId())) serviceRepository.update(service);
-                    else serviceRepository.delete(service.getId());
-                });
 
-        return ClinicDto.toDto(updatedClinic, serviceRepository.getAllByClinicId(updatedClinic.getId()));
+        List<com.example.clinic.domain.Service> newServices = clinicDto.getServices()
+                .stream()
+                .map(serviceDto -> ServiceDto.toDomain(serviceDto, updatedClinic.getId()))
+                .collect(Collectors.toList());
+        List<com.example.clinic.domain.Service> oldServices = serviceRepository.getAllByClinicId(clinicDto.getId());
+        if (CollectionUtils.isEmpty(newServices)) {
+            if (!CollectionUtils.isEmpty(oldServices)) serviceRepository.deleteAllByClinicId(updatedClinic.getId());
+            return ClinicDto.toDto(updatedClinic, newServices);
+        }
+
+        if (newServices.size() == oldServices.size() && newServices.containsAll(oldServices)) {
+            return ClinicDto.toDto(updatedClinic, newServices);
+        }
+
+        newServices.forEach(newService -> {
+            if (oldServices.contains(newService)) serviceRepository.update(newService);
+            else serviceRepository.create(newService);
+        });
+
+        oldServices.forEach(oldService -> {
+            if (!newServices.contains(oldService)) serviceRepository.delete(oldService.getId());
+        });
+
+
+        return ClinicDto.toDto(updatedClinic, newServices);
 
     }
 
     @Override
     public void delete(long id) {
-        serviceRepository.deleteAllByClinicId(id);
-        clinicRepository.delete(id);
+        clinicRepository.getById(id).map(clinic -> {
+            serviceRepository.deleteAllByClinicId(id);
+            clinicRepository.delete(id);
+            return clinic;
+        }).orElseThrow(() -> new ResourceNotFoundException("Clinic with id = " + id + " is not fond"));
     }
 
     @Override

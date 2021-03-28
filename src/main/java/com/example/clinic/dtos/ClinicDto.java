@@ -3,23 +3,19 @@ package com.example.clinic.dtos;
 import com.example.clinic.domain.Clinic;
 import com.example.clinic.domain.Service;
 import com.example.clinic.domain.TypeClinicEnum;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
+@Builder
 public class ClinicDto {
 
     private long id;
